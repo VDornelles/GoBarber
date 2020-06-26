@@ -40,3 +40,6 @@ module.exports = {
     return queryInterface.dropTable('users');
   },
 };
+
+// yarn sequelize migration:create --name:migration-name
+// yarn sequelize db:migrate
