@@ -1,4 +1,5 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
+
 import bcrypt from 'bcryptjs';
 import dataBaseConfig from '../../config/database';
 
