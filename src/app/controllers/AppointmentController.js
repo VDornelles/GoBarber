@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { isBefore, startOfHour, parseISO, format } from 'date-fns';
+import { json } from 'sequelize';
 import Appointment from '../models/Appointments';
 import User from '../models/User';
 import File from '../models/File';
@@ -65,6 +66,14 @@ class AppointmentController {
       return res.status(400).json({ error: 'Past dates are not available' });
     }
 
+    // Check if user is not trying to shchedule an appointment with himself
+    if (provider_id == req.userId) {
+      return res.json({
+        error:
+          'You cannot schedule an appointment with yourself! Try a different provider.',
+      });
+    }
+
     // Check if date selected is available
     const checkAvailability = await Appointment.findOne({
       where: {
@@ -87,7 +96,7 @@ class AppointmentController {
     const user = await User.findByPk(req.userId);
     const formattedDate = format(hourStart, "MMMM dd, 'at' H:mm'h'");
     await Notification.create({
-      content: `New appointment has been scheduled. User: ${user.name}.${formattedDate}`,
+      content: `New appointment has been scheduled by ${user.name}. ${formattedDate}`,
       user: provider_id,
     });
 
