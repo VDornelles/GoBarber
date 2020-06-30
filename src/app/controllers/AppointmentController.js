@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { isBefore, startOfHour, parseISO, format } from 'date-fns';
+import { isBefore, startOfHour, parseISO, format, subHours } from 'date-fns';
 import { json } from 'sequelize';
 import Appointment from '../models/Appointments';
 import User from '../models/User';
@@ -99,6 +99,31 @@ class AppointmentController {
       content: `New appointment has been scheduled by ${user.name}. ${formattedDate}`,
       user: provider_id,
     });
+
+    return res.json(appointment);
+  }
+
+  async delete(req, res) {
+    const appointment = await Appointment.findByPk(req.params.id);
+
+    if (appointment.user_id !== req.userId) {
+      return res.status(401).json({
+        error: "You don't have the permission to cancel this appointment",
+      });
+    }
+
+    const dateWithSub = subHours(appointment.date, 2);
+
+    if (isBefore(dateWithSub, new Date())) {
+      return res.status(400).json({
+        error:
+          'The appointment time is too close, you cannot cancel it anymore',
+      });
+    }
+
+    appointment.canceled_at = new Date();
+
+    appointment.save();
 
     return res.json(appointment);
   }
