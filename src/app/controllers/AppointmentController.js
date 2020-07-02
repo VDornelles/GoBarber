@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import { isBefore, startOfHour, parseISO, format, subHours } from 'date-fns';
-import { json } from 'sequelize';
 import Appointment from '../models/Appointments';
 import User from '../models/User';
 import File from '../models/File';
