@@ -1,6 +1,6 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
+import { isBefore, subHours } from 'date-fns';
 
-import bcrypt from 'bcryptjs';
 import dataBaseConfig from '../../config/database';
 
 import User from './User';
@@ -13,6 +13,18 @@ Appointment.init(
   {
     date: DataTypes.DATE,
     canceled_at: DataTypes.DATE,
+    past: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return isBefore(this.date, new Date());
+      },
+    },
+    cancelable: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return isBefore(new Date(), subHours(this.date, 2));
+      },
+    },
   },
   {
     sequelize,
