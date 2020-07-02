@@ -29,8 +29,15 @@ class ScheduleController {
         date: {
           [Op.between]: [startOfDay(parsedDate), endOfDay(parsedDate)],
         },
-        order: ['date'],
       },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name'],
+        },
+      ],
+      order: ['date'],
     });
     return res.json(appointments);
   }
