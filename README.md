@@ -1,7 +1,7 @@
 # GoBarber API
 
 ## Features
-Some of the major features used in the development of this API:
+Some of the major features and concepts used in the development of this API:
 
 * [NodeJs](https://nodejs.org/en/)
 * [Docker](https://www.docker.com/)
